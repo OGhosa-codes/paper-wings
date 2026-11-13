@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paper Wings — Scrapbooking</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+:root{
+  --page:#e4e3e0; --page-2:#d9d8d4; --card:#f6f4ef; --ink:#1c1b1a; --muted:#5f5b56;
+  --wine:#6b1d24; --wine-2:#8c2c35; --kraft:#d8c6ad; --line:rgba(28,27,26,.14);
+  --serif:"EB Garamond",Georgia,serif; --display:"Cormorant Garamond",Georgia,serif;
+  --type:"Special Elite","Courier New",monospace; --hand:"Caveat","Segoe Print",cursive;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; color:var(--ink); font-family:var(--serif); font-size:19px; line-height:1.6;
+  background-color:var(--page);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.1 0 0 0 0 0.1 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at 20% 0%, rgba(255,255,255,.55), transparent 60%),
+    radial-gradient(ellipse at 90% 60%, rgba(107,29,36,.05), transparent 55%);
+  overflow-x:hidden;
+}
+img{display:block;max-width:100%}
+a{color:var(--wine)}
+
+/* ---------- flight layer ---------- */
+#flight{position:absolute;inset:0 0 auto 0;pointer-events:none;z-index:30}
+#trail-layer{position:absolute;inset:0 0 auto 0;pointer-events:none;z-index:0}
+#trail{position:absolute;left:0;top:0;overflow:visible}
+main,.top,footer{position:relative;z-index:1}
+.top{position:absolute}
+#thread{fill:none;stroke:#2b2826;stroke-width:1.4;stroke-dasharray:5 6;stroke-linecap:round;opacity:.75}
+#thread-shadow{fill:none;stroke:rgba(255,255,255,.7);stroke-width:1.4;stroke-dasharray:5 6;transform:translate(1px,1px)}
+#bf{
+  position:absolute;left:0;top:0;width:132px;aspect-ratio:688/534;pointer-events:auto;cursor:pointer;
+  perspective:480px;will-change:transform;
+  filter:drop-shadow(0 0 .7px #fff) drop-shadow(0 0 .7px #fff) drop-shadow(0 0 1.2px #fff) drop-shadow(0 14px 12px rgba(0,0,0,.3));
+  background:none;border:0;padding:0;
+}
+#bf:focus-visible{outline:2px dashed var(--wine);outline-offset:6px;border-radius:50%}
+#bf .w{position:absolute;top:0;height:100%;transform-style:preserve-3d}
+#bf .w img{width:100%;height:100%}
+#bf .wl{left:0;width:48.84%;transform-origin:100% 50%}
+#bf .wr{left:47.67%;width:52.33%;transform-origin:0 50%}
+#bf .body{position:absolute;left:45.06%;top:31.84%;width:6.4%}
+
+/* ---------- shared ---------- */
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+section{position:relative;padding:110px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.grid.flip > .collage{order:-1}
+.label{font-family:var(--type);font-size:14px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;display:flex;width:fit-content;gap:10px;align-items:center}
+.label::before{content:"";width:28px;height:1px;background:currentColor}
+h2{font-family:var(--display);font-weight:600;font-size:clamp(40px,5vw,62px);line-height:1.02;margin:.25em 0 .45em;position:relative;display:inline-block}
+h2 em{color:var(--wine);font-style:italic}
+h2::after{content:"";position:absolute;left:0;right:0;bottom:-.12em;border-bottom:2px dashed var(--wine);transform:scaleX(0);transform-origin:left;transition:transform 1.1s cubic-bezier(.6,.1,.2,1)}
+.reached h2::after{transform:scaleX(1)}
+p{margin:0 0 1em}
+.hand{font-family:var(--hand);font-size:26px;line-height:1.15;color:var(--wine)}
+
+.card{
+  position:relative;background:var(--card);padding:38px 40px 30px;
+  box-shadow:0 1px 0 rgba(0,0,0,.05),0 14px 30px -18px rgba(0,0,0,.35);
+  transform:rotate(-.5deg);
+}
+.card.r{transform:rotate(.6deg)}
+.card::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(transparent 0 31px,rgba(28,27,26,.035) 31px 32px);}
+
+.tape{position:absolute;height:30px;width:120px;z-index:3;opacity:.86;
+  background:repeating-linear-gradient(45deg,rgba(255,255,255,.18) 0 6px,transparent 6px 12px),rgba(160,158,152,.62);
+  clip-path:polygon(0 6%,4% 0,8% 8%,12% 0,16% 6%,100% 0,96% 12%,100% 25%,96% 38%,100% 52%,96% 66%,100% 80%,96% 92%,100% 100%,0 100%,4% 86%,0 72%,4% 58%,0 44%,4% 30%,0 18%);
+  box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.tape.wine{background:repeating-linear-gradient(90deg,rgba(255,255,255,.12) 0 3px,transparent 3px 9px),rgba(107,29,36,.78)}
+.tape.dark{background:repeating-linear-gradient(-45deg,rgba(255,255,255,.08) 0 4px,transparent 4px 10px),rgba(28,27,26,.78)}
+
+.collage{position:relative;width:100%}
+.piece{position:absolute;left:var(--x);top:var(--y);width:var(--w);transform:rotate(var(--r,0deg));
+  filter:drop-shadow(0 7px 7px rgba(0,0,0,.2));transition:translate .3s}
+.piece.flat{filter:drop-shadow(0 3px 3px rgba(0,0,0,.18))}
+.landed{animation:nudge .7s ease-out}
+@keyframes nudge{25%{translate:0 5px}55%{translate:0 -2px}100%{translate:0 0}}
+
+
+/* hand-made paper scraps (text set in the page's own fonts) */
+.scrap{position:absolute;filter:drop-shadow(0 7px 7px rgba(0,0,0,.2))}
+.scrap > div{width:100%;height:100%;overflow:hidden}
+.news > div{background:#efece6;color:#24211f;padding:7% 8%;font-family:var(--serif);clip-path:polygon(2.0% 1.7%,4.2% 1.1%,6.5% 1.6%,8.8% 0.9%,11.1% 1.3%,13.3% 1.1%,15.6% 0.5%,17.8% 0.9%,20.1% 0.2%,22.4% 0.5%,24.6% 0.0%,26.9% 0.0%,29.2% 0.2%,31.5% 1.1%,33.7% 0.4%,36.0% 0.1%,38.3% 0.6%,40.6% 1.5%,42.8% 1.3%,45.1% 0.9%,47.4% 1.6%,49.6% 0.3%,51.9% 1.0%,54.1% 0.4%,56.4% 0.0%,58.6% 0.0%,60.9% 0.0%,63.2% 0.2%,65.4% 0.0%,67.7% 0.0%,70.0% 0.2%,72.3% 0.4%,74.6% 1.0%,77.1% 0.6%,79.5% 0.6%,81.8% 1.1%,83.9% 2.3%,86.2% 2.8%,88.6% 3.1%,90.8% 4.0%,93.1% 4.4%,95.5% 4.6%,97.6% 5.8%,99.6% 6.0%,100.0% 8.3%,99.6% 10.5%,99.4% 12.8%,98.5% 15.0%,98.2% 17.3%,98.7% 19.6%,97.7% 21.8%,98.5% 24.1%,98.4% 26.4%,97.7% 28.6%,98.2% 31.0%,97.9% 33.2%,98.4% 35.6%,97.5% 37.8%,96.6% 39.8%,95.5% 41.8%,93.8% 43.5%,93.3% 45.9%,91.9% 47.8%,90.7% 49.8%,89.5% 51.8%,88.6% 53.9%,86.9% 55.6%,85.3% 57.4%,84.6% 59.6%,83.7% 62.0%,84.8% 64.2%,84.5% 66.5%,84.4% 68.7%,83.9% 71.1%,84.0% 73.3%,85.1% 75.4%,85.7% 77.6%,85.6% 79.9%,86.8% 82.0%,86.8% 84.3%,87.5% 86.5%,88.0% 88.7%,88.6% 90.9%,87.7% 93.2%,88.5% 95.4%,88.8% 97.7%,88.0% 100.0%,85.8% 99.3%,83.5% 100.0%,81.3% 99.9%,79.1% 99.5%,76.9% 98.6%,74.7% 98.1%,72.5% 97.7%,70.2% 98.4%,67.9% 98.6%,65.7% 98.7%,63.5% 97.8%,61.3% 97.0%,59.0% 97.9%,56.7% 98.4%,54.5% 98.5%,52.2% 98.5%,50.0% 98.0%,47.8% 97.4%,45.6% 97.6%,43.3% 98.1%,41.1% 97.6%,38.9% 97.4%,36.7% 96.8%,34.5% 95.7%,32.3% 95.4%,30.0% 96.0%,28.1% 94.5%,26.2% 93.1%,23.7% 92.6%,22.2% 90.6%,20.4% 89.0%,18.6% 87.4%,16.6% 86.1%,14.3% 85.4%,12.1% 84.4%,9.7% 83.8%,8.2% 81.9%,6.8% 79.9%,5.7% 77.7%,5.1% 75.4%,4.4% 73.2%,4.1% 70.8%,3.2% 68.6%,2.3% 66.4%,1.8% 64.1%,1.2% 61.8%,1.0% 59.5%,0.1% 57.3%,0.9% 54.6%,0.6% 52.3%,0.0% 50.0%,0.0% 47.7%,0.0% 45.4%,0.0% 43.1%,0.0% 40.8%,0.4% 38.6%,1.4% 36.3%,1.1% 34.0%,1.0% 31.7%,0.3% 29.4%,0.0% 27.1%,0.1% 24.8%,0.2% 22.5%,1.2% 20.3%,0.7% 18.0%,0.2% 15.7%,1.6% 13.4%,1.7% 11.1%,1.1% 8.8%,1.5% 6.6%,0.9% 4.2%)}
+.news .mast{font-family:"Abril Fatface",serif;font-size:clamp(17px,2.4vw,30px);line-height:1;text-align:center;border-bottom:2px solid #24211f;padding-bottom:4px}
+.news .meta{font-family:var(--type);font-size:clamp(7px,.7vw,9px);display:flex;justify-content:space-between;border-bottom:1px solid #24211f;padding:3px 0;margin-bottom:6px}
+.news h4{font-family:var(--display);font-weight:700;font-size:clamp(14px,1.7vw,22px);line-height:1.05;margin:4px 0 6px}
+.news .cols{columns:2;column-gap:10px;font-size:clamp(7.5px,.8vw,10px);line-height:1.35;text-align:justify;hyphens:auto}
+.news .cols p{margin:0 0 5px}
+.letter > div{background:linear-gradient(#e9dcc2,#e3d3b5);clip-path:polygon(0.0% 0.0%,2.2% 0.3%,4.4% 0.5%,6.6% 0.0%,8.9% 0.0%,11.1% 0.0%,13.3% 0.0%,15.5% 0.0%,17.7% 0.3%,19.9% 0.4%,22.1% 0.3%,24.4% 0.5%,26.6% 0.0%,28.8% 0.0%,31.0% 0.0%,33.2% 0.3%,35.4% 0.0%,37.6% 0.2%,39.9% 0.0%,42.1% 0.0%,44.3% 0.0%,46.5% 0.0%,48.7% 0.4%,50.9% 0.0%,53.1% 0.0%,55.4% 0.0%,57.6% 0.0%,59.8% 0.0%,61.2% 0.3%,61.5% 2.7%,63.5% 4.4%,64.5% 6.6%,65.9% 8.6%,66.7% 10.7%,67.0% 13.1%,68.3% 15.1%,68.5% 17.6%,70.0% 19.5%,70.4% 21.6%,71.4% 23.9%,73.1% 25.5%,74.8% 27.2%,76.2% 29.2%,77.8% 30.9%,79.5% 32.5%,81.6% 33.8%,82.6% 36.1%,83.2% 38.2%,83.4% 40.6%,84.3% 42.8%,85.6% 44.8%,86.7% 46.9%,87.0% 49.2%,87.5% 51.5%,89.0% 53.4%,90.0% 55.6%,90.2% 57.9%,91.1% 60.1%,91.6% 62.6%,92.7% 64.7%,94.6% 66.5%,94.8% 69.1%,96.0% 71.2%,97.0% 73.4%,98.4% 75.4%,99.4% 77.6%,100.0% 80.0%,99.4% 82.2%,100.0% 84.5%,99.5% 86.7%,99.8% 89.0%,99.0% 91.1%,99.5% 93.4%,99.4% 95.6%,99.1% 97.9%,98.0% 99.8%,95.8% 100.0%,93.5% 100.0%,91.3% 100.0%,89.1% 100.0%,86.9% 100.0%,84.6% 99.5%,82.4% 99.7%,80.2% 99.0%,78.0% 100.0%,75.7% 99.2%,73.5% 99.8%,71.3% 100.0%,69.0% 99.8%,66.8% 99.1%,64.6% 100.0%,62.4% 100.0%,60.1% 99.9%,57.9% 100.0%,55.7% 100.0%,53.5% 100.0%,51.2% 100.0%,49.0% 100.0%,46.8% 99.6%,44.5% 98.8%,42.3% 99.3%,40.1% 100.0%,37.9% 100.0%,35.6% 99.8%,33.4% 99.3%,31.2% 99.3%,29.0% 100.0%,26.7% 100.0%,24.5% 100.0%,22.3% 99.8%,20.0% 100.0%,17.8% 99.4%,15.6% 98.9%,13.4% 100.0%,11.1% 100.0%,8.9% 99.5%,6.7% 100.0%,4.5% 99.3%,2.2% 99.5%,0.4% 100.0%,0.6% 97.8%,0.0% 95.6%,0.0% 93.3%,0.0% 91.1%,0.0% 88.9%,0.3% 86.7%,0.0% 84.4%,0.4% 82.2%,0.1% 80.0%,0.0% 77.8%,0.0% 75.6%,0.6% 73.3%,0.5% 71.1%,0.5% 68.9%,1.1% 66.7%,1.5% 64.4%,1.4% 62.2%,0.7% 60.0%,0.6% 57.8%,1.1% 55.6%,1.2% 53.3%,0.8% 51.1%,0.2% 48.9%,0.0% 46.7%,0.4% 44.4%,0.3% 42.2%,0.0% 40.0%,0.0% 37.8%,0.7% 35.6%,1.0% 33.3%,1.3% 31.1%,1.5% 28.9%,1.0% 26.7%,1.1% 24.4%,0.4% 22.2%,0.0% 20.0%,0.0% 17.8%,0.0% 15.6%,0.4% 13.3%,0.6% 11.1%,0.4% 8.9%,0.5% 6.7%,0.0% 4.4%,0.0% 2.2%);padding:9% 13% 0 8%;
+  background-image:repeating-linear-gradient(transparent 0 calc(1.6em - 1px),rgba(107,29,36,.18) calc(1.6em - 1px) 1.6em),linear-gradient(#ebdfc6,#e2d1b1);
+  font-family:var(--hand);color:#3b2a1e;font-size:clamp(12px,1.3vw,17px);line-height:1.6em}
+
+/* reveal */
+.js .reveal{opacity:0;translate:0 26px;transition:opacity .9s ease,translate .9s ease}
+.js .reveal.in{opacity:1;translate:0 0}
+
+/* ---------- top bar ---------- */
+.top{position:absolute;top:0;left:0;right:0;z-index:20}
+.top .wrap{display:flex;justify-content:space-between;align-items:center;padding-top:22px}
+.mark{font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:.02em}
+.mark span{color:var(--wine);font-style:italic}
+.hobby-no{font-family:var(--type);font-size:13px;letter-spacing:.1em;border:1px solid var(--ink);padding:5px 10px;transform:rotate(2deg)}
+
+/* ---------- hero ---------- */
+.hero{min-height:100vh;padding:130px 0 90px;display:flex;align-items:center}
+.hero .grid{grid-template-columns:1.05fr 1fr}
+.ransom{font-size:clamp(54px,8.4vw,112px);line-height:1.1;margin:.1em 0 .25em;font-weight:400}
+.ransom .wd{display:inline-block;white-space:nowrap}
+.ransom .wd + .wd{margin-left:.22em}
+.ransom i{display:inline-block;font-style:normal;padding:0 .1em;margin:0 .015em;line-height:1.08;box-shadow:0 3px 6px -2px rgba(0,0,0,.3);transform:rotate(var(--t,0deg))}
+.ransom .a{background:var(--ink);color:#f3f1ec;font-family:"Abril Fatface",serif}
+.ransom .b{background:var(--wine);color:#f4e8e2;font-family:var(--type);font-size:.86em}
+.ransom .c{background:var(--card);color:var(--ink);font-family:var(--display);font-style:italic;font-weight:700}
+.ransom .d{background:#c8c5bf;color:var(--ink);font-family:"Abril Fatface",serif;font-size:.9em}
+.ransom .e{background:var(--kraft);color:#3b2b20;font-family:var(--hand);font-weight:600;font-size:1.05em}
+.ransom .f{background:#f6f4ef;color:var(--wine);font-family:var(--display);font-weight:700;font-size:.95em;outline:1px solid rgba(0,0,0,.15)}
+.lede{font-size:22px;max-width:30em;color:#2c2a28}
+.scroll-hint{display:flex;align-items:center;gap:14px;margin-top:28px}
+.scroll-hint svg{width:46px;height:46px}
+
+/* ---------- history timeline ---------- */
+.timeline{list-style:none;margin:6px 0 0;padding:0;position:relative}
+.timeline::before{content:"";position:absolute;left:62px;top:8px;bottom:8px;border-left:1.5px dashed rgba(28,27,26,.35)}
+.timeline li{display:grid;grid-template-columns:78px 1fr;gap:18px;padding:10px 0}
+.timeline .yr{font-family:var(--type);font-size:14px;color:var(--wine);padding-top:4px;position:relative}
+.timeline .yr::after{content:"";position:absolute;left:58px;top:9px;width:9px;height:9px;border-radius:50%;background:var(--page);border:1.5px solid var(--wine)}
+.timeline b{font-family:var(--display);font-size:24px;font-weight:600;display:block;line-height:1.2}
+.timeline span{color:#3a3734}
+
+/* ---------- supplies ---------- */
+.supplies-head{display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:end;margin-bottom:40px}
+.cams{display:grid;grid-template-columns:repeat(3,1fr);gap:46px 40px}
+.cam{position:relative}
+.cam .shot{position:relative}
+.cam .shot img{width:100%;filter:drop-shadow(0 8px 8px rgba(0,0,0,.2))}
+.cam .screen{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  font-family:var(--type);color:var(--ink);font-size:clamp(15px,1.7vw,21px);letter-spacing:.04em;line-height:1.1;
+  background:linear-gradient(160deg,#fbfaf7,#ecebe7)}
+.cam .screen small{display:block;font-size:.55em;color:var(--muted);margin-bottom:6px;letter-spacing:.14em}
+.cam .cap{font-family:var(--hand);font-size:23px;line-height:1.15;margin-top:12px;color:#2c2a28;padding:0 6px}
+.cam:nth-child(odd){transform:rotate(-1.4deg)} .cam:nth-child(even){transform:rotate(1.2deg)}
+.tip{margin-top:46px;display:flex;gap:18px;align-items:center;background:var(--card);padding:18px 24px;max-width:720px;box-shadow:0 10px 24px -18px rgba(0,0,0,.4);position:relative}
+.tip img{width:58px;flex:none}
+
+/* ---------- techniques ---------- */
+.tech{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px}
+.tech div{background:var(--card);padding:16px 18px 14px;position:relative;box-shadow:0 8px 18px -14px rgba(0,0,0,.45)}
+.tech div:nth-child(3n+1){transform:rotate(-.8deg)} .tech div:nth-child(3n+2){transform:rotate(.7deg)}
+.tech b{font-family:var(--display);font-size:23px;font-weight:600;display:block;line-height:1.15;margin-bottom:4px}
+.tech b::before{content:"✂ ";color:var(--wine);font-size:.7em;vertical-align:.12em}
+.tech span{font-size:16.5px;line-height:1.45;color:#3a3734;display:block}
+
+/* ---------- steps ---------- */
+.steps{list-style:none;padding:0;margin:8px 0 0;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:54px 1fr;gap:14px;align-items:start;padding:12px 0;border-bottom:1px dashed var(--line)}
+.steps li:last-child{border-bottom:0}
+.steps li::before{content:counter(s);font-family:"Abril Fatface",serif;font-size:24px;width:44px;height:44px;display:grid;place-items:center;
+  background:var(--wine);color:#f4e8e2;border-radius:50%;box-shadow:inset 0 0 0 3px rgba(255,255,255,.12),0 4px 8px -3px rgba(0,0,0,.35)}
+.steps b{font-family:var(--display);font-size:24px;font-weight:600;display:block;line-height:1.2}
+.steps span{color:#3a3734}
+.frame-note{position:absolute;display:grid;place-items:center;text-align:center;font-family:var(--hand);color:var(--wine);font-size:clamp(20px,2.4vw,30px);line-height:1.05;transform:rotate(3deg)}
+
+/* ---------- closing ---------- */
+.closing{padding:240px 0 120px;text-align:center;overflow:hidden}
+.lantern{position:absolute;top:-20px;filter:drop-shadow(0 12px 12px rgba(0,0,0,.22));transform-origin:50% 0;animation:sway 6s ease-in-out infinite}
+.lantern.l1{left:7%;width:min(11vw,120px)}
+.lantern.l2{right:8%;width:min(14vw,150px);animation-delay:-2.5s;animation-duration:7s}
+@keyframes sway{50%{transform:rotate(2.2deg)}}
+.closing .card{max-width:640px;margin:0 auto;text-align:left}
+.soon{display:inline-flex;align-items:center;gap:10px;margin-top:10px;font-family:var(--type);font-size:15px;letter-spacing:.06em;
+  border:1.5px dashed var(--wine);color:var(--wine);padding:10px 16px;background:rgba(107,29,36,.04)}
+.hobbies{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 6px}
+.hobbies span{font-family:var(--type);font-size:14px;padding:6px 12px;background:#e9e7e2;border:1px solid var(--line)}
+.hobbies span.on{background:var(--ink);color:#f3f1ec;border-color:var(--ink)}
+.credits{max-width:620px;margin:14px auto 0;font-family:var(--serif);font-size:14px;letter-spacing:0;text-transform:none;line-height:1.5;color:var(--muted)}
+footer{padding:40px 20px 60px;text-align:center;font-family:var(--type);font-size:13px;color:var(--muted);letter-spacing:.06em}
+
+/* ---------- responsive ---------- */
+@media (max-width:900px){
+  body{font-size:18px}
+  section{padding:80px 0}
+  .grid,.hero .grid,.supplies-head{grid-template-columns:1fr;gap:40px}
+  .grid.flip > .collage{order:0}
+  .cams{grid-template-columns:repeat(2,1fr);gap:36px 22px}
+  .card{padding:30px 24px 24px}
+  .tech{grid-template-columns:1fr}
+  .hero{padding-top:110px}
+  .lede{font-size:20px}
+  #bf{width:92px}
+}
+@media (max-width:520px){
+  .wrap{padding:0 18px}
+  .cams{grid-template-columns:1fr 1fr;gap:28px 14px}
+  .cam .cap{font-size:19px}
+  .closing{padding-top:200px}
+  .timeline::before{left:52px}.timeline li{grid-template-columns:66px 1fr}.timeline .yr::after{left:48px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .lantern{animation:none}
+  .js .reveal{transition:none}
+}
+</style>
+</head>
+<body>
+<script>document.documentElement.classList.add('js')</script>
+
+<div id="trail-layer" aria-hidden="true">
+  <svg id="trail" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <mask id="reveal-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
+        <path id="reveal" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round"/>
+      </mask>
+    </defs>
+    <g mask="url(#reveal-mask)">
+      <path id="thread-shadow"/>
+      <path id="thread"/>
+    </g>
+    <path id="measure" fill="none" stroke="none"/>
+  </svg>
+</div>
+
+<!-- the butterfly -->
+<div id="flight">
+  <button id="bf" type="button" aria-label="Paper butterfly — click to make it loop">
+    <span class="w wl"><img src="img/wingL.webp" alt=""></span>
+    <span class="w wr"><img src="img/wingR.webp" alt=""></span>
+    <img class="body" src="img/body.webp" alt="">
+  </button>
+</div>
+
+<header class="top">
+  <div class="wrap">
+    <div class="mark">Paper <span>Wings</span></div>
+    <div class="hobby-no">HOBBY Nº 01</div>
+  </div>
+</header>
+
+<main>
+<!-- 1 · HERO -->
+<section class="hero" id="start">
+  <div class="wrap grid">
+    <div class="reveal">
+      <div class="label">A field guide to hobbies</div>
+      <h1 class="ransom" aria-label="Paper Wings">
+        <span class="wd"><i class="a" style="--t:-4deg">P</i><i class="e" style="--t:3deg">a</i><i class="c" style="--t:-2deg">p</i><i class="b" style="--t:5deg">e</i><i class="d" style="--t:-3deg">r</i></span>
+        <span class="wd"><i class="b" style="--t:3deg">W</i><i class="f" style="--t:-5deg">i</i><i class="a" style="--t:2deg">n</i><i class="e" style="--t:-3deg">g</i><i class="c" style="--t:4deg">s</i></span>
+      </h1>
+      <p class="lede">The first hobby in the book is <strong>scrapbooking</strong>: the gentle art of saving memories with paper, glue and a little imagination.</p>
+      <div class="scroll-hint">
+        <svg viewBox="0 0 46 46" fill="none" stroke="#6b1d24" stroke-width="1.6" stroke-linecap="round"><path d="M8 6c10 4 20 10 18 20s-10 6-6 1 14 1 14 13"/><path d="M28 36l6 5 3-8"/></svg>
+        <span class="hand">scroll &amp; follow the butterfly</span>
+      </div>
+    </div>
+    <div class="collage" style="aspect-ratio:1/1.08">
+      <img class="piece flat" src="img/torn.webp" alt="Torn burgundy and floral paper collage" style="--x:30%;--y:0%;--w:58%;--r:3deg" data-perch=".5,.42">
+      <img class="piece" src="img/stk_1.webp" alt="Vintage postage stamps" style="--x:4%;--y:4%;--w:27%;--r:-7deg">
+      <img class="piece" src="img/map.webp" alt="Antique world map" style="--x:0%;--y:50%;--w:42%;--r:-8deg">
+      <img class="piece" src="img/eiffel.webp" alt="Sketch of the Eiffel Tower" style="--x:83%;--y:47%;--w:15%;--r:7deg">
+      <img class="piece" src="img/stk_9.webp" alt="Burgundy wax seal" style="--x:64%;--y:84%;--w:15%;--r:0deg">
+      <div class="tape wine" style="left:46%;top:-2%;transform:rotate(-6deg)"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 · WHAT IS IT -->
+<section id="what">
+  <div class="wrap grid">
+    <div class="card reveal">
+      <div class="tape" style="left:38%;top:-14px;transform:rotate(-3deg)"></div>
+      <div class="label">Nº 02 — the basics</div>
+      <h2>What is <em>scrapbooking?</em></h2>
+      <p>Scrapbooking is the craft of keeping memories on paper. You take photos and the small things you'd normally throw away (ticket stubs, letters, receipts, pressed flowers) and arrange them on a page with decoration and a few handwritten words.</p>
+      <p>Part diary, part art project, part time capsule. A finished scrapbook doesn't just show what happened. It shows how it <em>felt</em>.</p>
+      <p class="hand" style="margin:0">no rules, just layers ✂</p>
+    </div>
+    <div class="collage" style="aspect-ratio:1/.98">
+      <img class="piece" src="img/news.webp" alt="Torn newspaper clipping" style="--x:0%;--y:3%;--w:56%;--r:-5deg">
+      <img class="piece" src="img/letter.webp" alt="Torn handwritten letter" style="--x:43%;--y:15%;--w:50%;--r:4deg" data-perch=".42,.1">
+      <img class="piece" src="img/stk_10.webp" alt="Floral paper tag" style="--x:7%;--y:57%;--w:14%;--r:-12deg">
+      <img class="piece" src="img/bfs_3.webp" alt="Vintage butterfly engraving" style="--x:24%;--y:66%;--w:21%;--r:-14deg">
+      <div class="tape dark" style="left:58%;top:12%;width:90px;transform:rotate(14deg)"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 · HISTORY -->
+<section id="history">
+  <div class="wrap grid flip">
+    <div class="card r reveal">
+      <div class="tape wine" style="left:8%;top:-12px;transform:rotate(-5deg)"></div>
+      <div class="label">Nº 03 — a little history</div>
+      <h2>Older than <em>you'd think</em></h2>
+      <ul class="timeline">
+        <li><div class="yr">1400s+</div><div><b>Commonplace books</b><span>Readers copied quotes, recipes, poems and letters into one personal book.</span></div></li>
+        <li><div class="yr">1800s</div><div><b>Scraps for everyone</b><span>Cheap printed pictures and cards spread, and people pasted them into albums: the first real "scrap" books.</span></div></li>
+        <li><div class="yr">1873</div><div><b>Mark Twain's invention</b><span>The author patented a self-pasting scrapbook with pre-gummed pages. You just moistened them, no messy glue.</span></div></li>
+        <li><div class="yr">1980</div><div><b>The modern boom</b><span>Marielen Christensen showed over 50 family albums at a records conference in Salt Lake City and helped start today's scrapbooking industry.</span></div></li>
+        <li><div class="yr">Today</div><div><b>Junk journals &amp; digital pages</b><span>Found-paper journals, digital kits and pages shared online.</span></div></li>
+      </ul>
+    </div>
+    <div class="collage" style="aspect-ratio:1/1.04">
+      <img class="piece" src="img/map.webp" alt="Antique world map" style="--x:2%;--y:0%;--w:58%;--r:-4deg">
+      <img class="piece" src="img/compass.webp" alt="Compass and pocket watch on handwritten paper" style="--x:48%;--y:20%;--w:47%;--r:5deg" data-perch=".33,.24">
+      <img class="piece" src="img/eiffel.webp" alt="Sketch of the Eiffel Tower" style="--x:1%;--y:50%;--w:17%;--r:-6deg">
+      <img class="piece" src="img/stk_1.webp" alt="Vintage postage stamps" style="--x:22%;--y:62%;--w:27%;--r:7deg">
+    </div>
+  </div>
+</section>
+
+<!-- 4 · SUPPLIES -->
+<section id="supplies">
+  <div class="wrap">
+    <div class="supplies-head reveal">
+      <div>
+        <div class="label">Nº 04 — the kit</div>
+        <h2>What you <em>need</em></h2>
+      </div>
+      <p style="margin:0 0 10px">You don't need much to start. Most first pages are made with things already in a drawer. Here's the basic kit:</p>
+    </div>
+    <div class="cams">
+      <div class="cam reveal"><div class="shot"><img src="img/cam_1.webp" alt="Silver camera frame"><div class="screen" style="left:6.8%;top:31.2%;width:48.1%;height:55.2%"><small>01</small>Album</div></div><div class="cap">a journal, sketchbook or ring binder (rings let you add pages)</div></div>
+      <div class="cam reveal"><div class="shot"><img src="img/cam_3.webp" alt="Pink camera frame"><div class="screen" style="left:8.9%;top:15.3%;width:55.9%;height:68.9%"><small>02</small>Paper</div></div><div class="cap">cardstock, patterned paper, old book pages, maps</div></div>
+      <div class="cam" data-perch=".82,.06"><div class="shot"><img src="img/cam_2.webp" alt="Sony camera frame"><div class="screen" style="left:9%;top:19.5%;width:59.1%;height:65.6%"><small>03</small>Glue</div></div><div class="cap">glue stick, double-sided tape, photo corners</div></div>
+      <div class="cam reveal"><div class="shot"><img src="img/cam_5.webp" alt="Retro TV frame"><div class="screen" style="left:7.1%;top:9.6%;width:66.1%;height:74.3%"><small>04</small>Scissors</div></div><div class="cap">sharp scissors, a craft knife, or just tear it</div></div>
+      <div class="cam reveal"><div class="shot"><img src="img/cam_4.webp" alt="Canon camera frame"><div class="screen" style="left:6.9%;top:31.2%;width:48.2%;height:55.3%"><small>05</small>Decor</div></div><div class="cap">washi tape, stamps, stickers, wax seals, ribbon</div></div>
+      <div class="cam reveal"><div class="shot"><img src="img/cam_7.webp" alt="Sony camera frame"><div class="screen" style="left:9%;top:19.9%;width:59.1%;height:65.3%"><small>06</small>Memories</div></div><div class="cap">photos, tickets, letters, receipts, pressed flowers</div></div>
+    </div>
+    <div class="tip reveal">
+      <img src="img/stk_9.webp" alt="">
+      <div><strong>Tip:</strong> look for <em>acid-free</em> or <em>archival</em> paper, glue and pens. They won't yellow or fade, so your pages last for decades.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 · TECHNIQUES -->
+<section id="styles">
+  <div class="wrap grid flip">
+    <div class="reveal">
+      <div class="label">Nº 05 — styles &amp; techniques</div>
+      <h2>Ways to <em>build a page</em></h2>
+      <div class="tech">
+        <div><b>Layering</b><span>Stack papers of different sizes and textures behind a photo for depth.</span></div>
+        <div><b>Torn edges</b><span>Tear paper towards you for a soft, white, feathery edge.</span></div>
+        <div><b>Journaling</b><span>Write the story: the date, the place, who was there, how it felt.</span></div>
+        <div><b>Collage</b><span>Mix print, paint, fabric and drawings, like the skull and rose here.</span></div>
+        <div><b>Ephemera</b><span>Save the "throwaway" bits: labels, stamps, tickets, wrappers.</span></div>
+        <div><b>Junk journaling</b><span>A looser book made from found and recycled papers.</span></div>
+      </div>
+    </div>
+    <div class="collage" style="aspect-ratio:1/1.12">
+      <img class="piece" src="img/skull.webp" alt="Collage of a skull printed on dictionary pages with a red rose" style="--x:0%;--y:26%;--w:46%;--r:-5deg">
+      <img class="piece" src="img/statue.webp" alt="Pencil drawing of a classical statue face" style="--x:45%;--y:0%;--w:25%;--r:4deg" data-perch=".5,.06">
+      <img class="piece" src="img/swan.webp" alt="Sketched swan with a gold flower" style="--x:58%;--y:52%;--w:40%;--r:0deg">
+      <img class="piece" src="img/rose.webp" alt="Vintage red rose illustration" style="--x:39%;--y:50%;--w:15%;--r:9deg">
+      <img class="piece" src="img/bfside.webp" alt="Butterfly made from book pages" style="--x:75%;--y:4%;--w:22%;--r:12deg">
+      <div class="tape" style="left:50%;top:-1%;width:80px;transform:rotate(-10deg)"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 · GETTING STARTED -->
+<section id="start-here">
+  <div class="wrap grid">
+    <div class="card reveal">
+      <div class="tape dark" style="right:10%;top:-12px;transform:rotate(4deg)"></div>
+      <div class="label">Nº 06 — your first page</div>
+      <h2>Getting <em>started</em></h2>
+      <ol class="steps">
+        <li><div><b>Pick one memory</b><span>A trip, a season, a person, a favourite day.</span></div></li>
+        <li><div><b>Gather the pieces</b><span>Photos plus anything flat: tickets, notes, leaves, wrappers.</span></div></li>
+        <li><div><b>Play before you glue</b><span>Move things around and leave a little empty space.</span></div></li>
+        <li><div><b>Stick it down in layers</b><span>Background paper first, then photos, then small details on top.</span></div></li>
+        <li><div><b>Write a few words</b><span>Even one line turns a page into a story.</span></div></li>
+      </ol>
+    </div>
+    <div class="collage" style="aspect-ratio:1/1">
+      <img class="piece" src="img/stk_4.webp" alt="Torn burgundy paper with moon and clouds" style="--x:0%;--y:2%;--w:44%;--r:-6deg">
+      <img class="piece" src="img/stk_8.webp" alt="Ornate vintage label" style="--x:44%;--y:0%;--w:40%;--r:3deg">
+      <div class="frame-note" style="left:47.5%;top:5%;width:33%;height:52%">there's<br>no wrong<br>page</div>
+      <img class="piece" src="img/cam_6.webp" alt="Polaroid with tape" style="--x:8%;--y:60%;--w:19%;--r:-8deg">
+      <img class="piece" src="img/cam_9.webp" alt="Polaroid with tape" style="--x:30%;--y:66%;--w:19%;--r:7deg">
+      <img class="piece" src="img/stk_12.webp" alt="Oval floral frame" style="--x:62%;--y:56%;--w:26%;--r:-4deg" data-perch=".5,.12">
+      <img class="piece" src="img/bfs_2.webp" alt="Vintage butterfly engraving" style="--x:84%;--y:42%;--w:16%;--r:18deg">
+    </div>
+  </div>
+</section>
+
+<!-- 7 · CLOSING -->
+<section class="closing" id="more">
+  <img class="lantern l1" src="img/lan_0.webp" alt="Hanging vintage lantern">
+  <img class="lantern l2" src="img/lan_1.webp" alt="Hanging vintage lantern">
+  <div class="wrap">
+    <div class="card" data-perch=".9,.03">
+      <div class="tape wine" style="left:40%;top:-12px;transform:rotate(-2deg)"></div>
+      <div class="label">Nº 07 — next page</div>
+      <h2>More wings <em>coming soon</em></h2>
+      <p>Paper Wings starts with scrapbooking, but this butterfly has more places to visit. Next: more hobbies to explore, and a short quiz to help you find the one that fits you.</p>
+      <div class="hobbies"><span class="on">Scrapbooking</span><span>Photography</span><span>Knitting</span><span>Pottery</span><span>Journaling</span><span>+ more</span></div>
+      <div class="soon">✦ Hobby finder quiz · in the making</div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>PAPER WINGS · MADE WITH PAPER, GLUE &amp; ONE VERY BUSY BUTTERFLY
+  <p class="credits">Image credits: the cutouts on this page are placeholder images collected from Pinterest. They belong to their original artists and are used here for a personal, non-commercial draft. If one of them is yours and you'd like it credited or removed, please get in touch.</p>
+</footer>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const flight = document.getElementById('flight'), trailLayer = document.getElementById('trail-layer');
+  const svg = document.getElementById('trail');
+  const thread = document.getElementById('thread');
+  const threadSh = document.getElementById('thread-shadow');
+  const reveal = document.getElementById('reveal');
+  const measure = document.getElementById('measure');
+  const bf = document.getElementById('bf');
+  const wl = bf.querySelector('.wl'), wr = bf.querySelector('.wr'), bodyEl = bf.querySelector('.body');
+
+  /* content reveal */
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .15 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  let anchors = [], anchorLen = [], keys = [], dwell = [], total = 1, ready = false;
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const smooth = t => t * t * (3 - 2 * t);
+
+  function layout() {
+    const W = document.documentElement.clientWidth;
+    flight.style.height = trailLayer.style.height = '0px';
+    const H = document.documentElement.scrollHeight;
+    flight.style.height = trailLayer.style.height = H + 'px';
+    svg.setAttribute('width', W); svg.setAttribute('height', H); svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+    // one perch per section (the first one in each)
+    const seen = new Set();
+    anchors = [...document.querySelectorAll('[data-perch]')].filter(el => { const s = el.closest('section'); if (seen.has(s)) return false; seen.add(s); return true; }).map(el => {
+      const r = el.getBoundingClientRect();
+      const [fx, fy] = el.dataset.perch.split(',').map(Number);
+      return { x: r.left + scrollX + r.width * fx, y: r.top + scrollY + r.height * fy, el, sec: el.closest('section') };
+    }).sort((a, b) => a.y - b.y);
+
+    // winding route: two wander points between each pair of perches
+    const m = Math.min(80, W * .09);
+    const pts = [anchors[0]], idx = [0];
+    for (let i = 0; i < anchors.length - 1; i++) {
+      const a = anchors[i], b = anchors[i + 1], dy = b.y - a.y;
+      const mid = (a.x + b.x) / 2, far = mid < W / 2 ? W - m : m, near = W - far;
+      pts.push({ x: clamp(lerp(mid, far, .85), m, W - m), y: a.y + dy * .32 });
+      pts.push({ x: clamp(lerp(b.x, near, .45), m, W - m), y: a.y + dy * .7 });
+      pts.push(b); idx.push(pts.length - 1);
+    }
+    const segs = [`M${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`];
+    for (let i = 0; i < pts.length - 1; i++) {
+      const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+      segs.push(`C${(p1.x + (p2.x - p0.x) / 6).toFixed(1)},${(p1.y + (p2.y - p0.y) / 6).toFixed(1)} ${(p2.x - (p3.x - p1.x) / 6).toFixed(1)},${(p2.y - (p3.y - p1.y) / 6).toFixed(1)} ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`);
+    }
+    const d = segs.join(' ');
+    thread.setAttribute('d', d); threadSh.setAttribute('d', d); reveal.setAttribute('d', d);
+    total = thread.getTotalLength();
+    anchorLen = idx.map(k => { if (k === 0) return 0; measure.setAttribute('d', segs.slice(0, k + 1).join(' ')); return measure.getTotalLength(); });
+
+    const vh = innerHeight, maxS = Math.max(1, H - vh);
+    keys = anchors.map(a => clamp(a.y - vh * .55, 0, maxS));
+    for (let i = 1; i < keys.length; i++) keys[i] = Math.max(keys[i], keys[i - 1] + 2);
+    dwell = keys.map((k, i) => {
+      const gapA = i > 0 ? k - keys[i - 1] : Infinity, gapB = i < keys.length - 1 ? keys[i + 1] - k : Infinity;
+      return Math.min(vh * .14, gapA * .22, gapB * .22);
+    });
+    if (!ready) { cur = target(scrollY).len; ready = true; }
+  }
+
+  function target(s) {
+    const n = keys.length;
+    if (s <= keys[0] + dwell[0]) return { len: 0, at: 0 };
+    for (let i = 0; i < n - 1; i++) {
+      const a = keys[i] + dwell[i], b = keys[i + 1] - dwell[i + 1];
+      if (s < a) return { len: anchorLen[i], at: i };
+      if (s <= b) return { len: lerp(anchorLen[i], anchorLen[i + 1], smooth((s - a) / Math.max(1, b - a))), at: -1 };
+      if (s <= keys[i + 1] + dwell[i + 1]) return { len: anchorLen[i + 1], at: i + 1 };
+    }
+    return { len: anchorLen[n - 1], at: n - 1 };
+  }
+
+  let cur = 0, pos = null, ang = 0, phase = 0, cyc = 0, hop = 0, loopT = 0, lastT = performance.now(), landedOn = -1;
+  const pointer = { x: -9999, y: -9999 };
+  addEventListener('pointermove', e => { pointer.x = e.clientX + scrollX; pointer.y = e.clientY + scrollY; }, { passive: true });
+  bf.addEventListener('click', () => { loopT = 1; });
+
+  function tick(now) {
+    requestAnimationFrame(tick);
+    if (!ready) return;
+    const dt = Math.min(.05, (now - lastT) / 1000); lastT = now;
+    const t = now / 1000;
+    const { len, at } = target(scrollY);
+    cur += (len - cur) * (reduce ? 1 : 1 - Math.pow(.0012, dt));
+    const p = thread.getPointAtLength(cur);
+    const moving = Math.abs(len - cur) > 2.5;
+
+    let ox = 0, oy = 0;
+    if (moving && !reduce) { ox += Math.sin(t * 5.3) * 6; oy += Math.cos(t * 7.1) * 5; }
+    const near = !moving && Math.hypot(pointer.x - p.x, pointer.y - p.y) < 120;
+    hop += ((near ? 1 : 0) - hop) * Math.min(1, dt * 5);
+    oy -= hop * 30; ox += hop * Math.sin(t * 6) * 9;
+    if (loopT > 0) {
+      loopT = Math.max(0, loopT - dt / 1.3);
+      const a = (1 - loopT) * Math.PI * 2, R = 52 * Math.sin(Math.PI * (1 - loopT));
+      ox += R * Math.sin(a); oy -= R * (1 - Math.cos(a));
+    }
+    const x = p.x + ox, y = p.y + oy;
+    if (!pos) pos = { x, y };
+    const vx = x - pos.x, vy = y - pos.y, sp = Math.hypot(vx, vy) / Math.max(dt * 60, .3);
+    pos = { x, y };
+
+    const flying = moving || hop > .15 || loopT > 0;
+    let ta = flying ? (sp > .8 ? Math.atan2(vx, -vy) * 180 / Math.PI : ang) : -8;
+    const diff = ((ta - ang + 540) % 360) - 180;
+    ang += diff * Math.min(1, dt * (flying ? 5 : 2.5));
+
+    phase += dt * (flying ? 17 + Math.min(sp, 25) * .35 : 1.4);
+    const wing = flying ? 38 + 36 * Math.sin(phase) : 14 + 46 * Math.pow(.5 + .5 * Math.sin(phase), 3);
+    bf.style.transform = `translate(${x}px,${y}px) translate(-50%,-50%) rotate(${ang}deg)`;
+    wl.style.transform = `rotateY(${wing}deg)`;
+    wr.style.transform = `rotateY(${-wing}deg)`;
+
+    reveal.style.strokeDasharray = `${Math.max(.1, cur)} ${total + 50}`;
+
+    if (!moving && at >= 0 && at !== landedOn) {
+      landedOn = at; const el = anchors[at].el;
+      el.classList.remove('landed'); void el.offsetWidth; el.classList.add('landed');
+    }
+    if (moving) landedOn = -1;
+    anchors.forEach((a, i) => { if (cur >= anchorLen[i] - 40) a.sec && a.sec.classList.add('reached'); });
+  }
+
+  let pending = 0;
+  const relayout = () => { cancelAnimationFrame(pending); pending = requestAnimationFrame(layout); };
+  new ResizeObserver(relayout).observe(document.body);
+  addEventListener('resize', relayout);
+  addEventListener('load', relayout);
+  document.querySelectorAll('img').forEach(img => img.complete || img.addEventListener('load', relayout));
+  layout();
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
