@@ -51,7 +51,6 @@ The cutout images are placeholders collected from Pinterest. They belong to thei
 
 ## Roadmap
 
-- [ ] Replace placeholder images with public-domain or original artwork
 - [ ] Home page linking all hobbies
 - [ ] Hobby-finder quiz
 - [ ] More hobby pages (photography, knitting, pottery, journaling…)
